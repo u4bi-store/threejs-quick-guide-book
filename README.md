@@ -55,3 +55,5 @@
 - Box3
 - Color
 - Vector3
+- Matrix4
+- Quaternion
