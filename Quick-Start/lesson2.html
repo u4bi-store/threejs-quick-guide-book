@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
     <head>
-        <title>Quick Start Three js - lesson 1</title>
+        <title>Quick Start Three js - lesson 2</title>
         <style>
             
         </style>
@@ -28,6 +28,8 @@
             scene    = new THREE.Scene(), // 여러 장면들이 들어갈 공간 즉 씬을 생성한다
             container = document.getElementById('container'); // body에 정의한 태그를 dom 형태로 가져온다
         
+        var 
+            cube; // 큐브 오브젝트
 
         init();
 
@@ -39,6 +41,12 @@
 
             container.appendChild( renderer.domElement ); // 미리 정의해놓은 DOM에 씬들이 구성된 렌더러를 주입한다
             
+            var geometry = new THREE.BoxGeometry(1, 1, 1), // 박스형 지오메트리 생성
+                material = new THREE.MeshBasicMaterial({ color : 0x00FF00 }); // 연두색의 머터리얼 생성
+
+            cube = new THREE.Mesh( geometry, material ); // 이미 정의한 변수들을 주입하여 큐브를 형상시킨다
+
+            scene.add(cube); // 마지막으로 형상화된 큐브를 공간에 담는다
 
             render(); // 렌더링 함수를 호출한다
         }

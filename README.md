@@ -6,6 +6,11 @@
     - scene
     - camera
 
+- 간단한 큐브 구성하기
+    - geometry
+    - material
+    - cube
+
 ##### Object3D
 - transforms
     - position
