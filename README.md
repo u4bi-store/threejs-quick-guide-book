@@ -27,8 +27,6 @@
 - Box
 - Sphere
 - Plane
-- Polyhedrons
-- Cilinders And Tubes
 - LatheGeometry
 - TextGeometry
 
@@ -55,5 +53,3 @@
 - Box3
 - Color
 - Vector3
-- Matrix4
-- Quaternion
