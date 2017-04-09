@@ -6,6 +6,16 @@
     - scene
     - camera
 
+##### Object3D
+- transforms
+    - position
+    - rotation
+    - scale
+
+##### Camera
+- PerspectiveCamera
+- OrthogrphicCamera
+
 ##### Light
 - Point Light
 - SpotLight
@@ -27,3 +37,15 @@
 - MeshLambertMaterial
 - MeshPhongMaterial
 - MeshFaceMaterial
+
+##### 부가적인 기능
+- Fog
+- Textures
+- Loaders
+- Particles
+- Raycaster
+
+##### 부가 플러그인
+- Threex 
+- Physijs
+- Tween.js
