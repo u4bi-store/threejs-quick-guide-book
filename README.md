@@ -11,6 +11,11 @@
     - material
     - cube
 
+- 큐브를 변형 시키기
+    - position
+    - rotation
+    - scale
+
 ##### Object3D
 - transforms
     - position
