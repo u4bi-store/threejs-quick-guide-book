@@ -57,6 +57,7 @@
 - Threex 
 - Physijs
 - Tween.js
+- Clara.js
 
 ##### Math
 - Box2
