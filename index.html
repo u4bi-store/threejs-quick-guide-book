@@ -11,7 +11,8 @@
         <div id="container"></div>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/84/three.min.js"></script>
-		<script>
+		<script src="http://threejs.org/examples/js/controls/OrbitControls.js"></script>
+        <script>
 
         var screen = {
                 width  : 400,
@@ -26,26 +27,33 @@
             renderer = new THREE.WebGLRenderer(),
             camera   = new THREE.PerspectiveCamera( view.angle, view.aspect, view. near, view.far ),
             scene    = new THREE.Scene(),
+	        controls = new THREE.OrbitControls( camera );
             container = document.getElementById('container');
         
         var 
             cube;
 
-        init();
+        function setup(){        
+            scene.add(camera);
+            scene.add(new THREE.AxisHelper(20));
+            camera.position.set(10,10,10);
+            camera.lookAt(new THREE.Vector3(0,0,0));
+            controls.minDistance = 10;
+            controls.maxDistance = 50;
+            renderer.setSize(screen.width, screen.height);
+            container.appendChild(renderer.domElement); 
+        }
 
         function init(){
-            scene.add(camera);
-            camera.position.z = 20;
-
-            renderer.setSize( screen.width, screen.height );
-
-            container.appendChild( renderer.domElement ); 
+            setup();
 
             var geometry = new THREE.BoxGeometry(1, 1, 1),
-                material = new THREE.MeshBasicMaterial({ color : 0x00FF00 }),
-                cube = new THREE.Mesh( geometry, material );
+                material = new THREE.MeshBasicMaterial({ color : 0xFFFFFF, wireframe: true});
+                
+            cube = new THREE.Mesh( geometry, material );
             
             scene.add(cube);
+
             render();
 
         }
@@ -57,6 +65,7 @@
 
         }
 
+        init();
         </script>
     </body>
 
