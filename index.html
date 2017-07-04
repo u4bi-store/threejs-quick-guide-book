@@ -27,7 +27,7 @@
             renderer = new THREE.WebGLRenderer(),
             camera   = new THREE.PerspectiveCamera( view.angle, view.aspect, view. near, view.far ),
             scene    = new THREE.Scene(),
-	        controls = new THREE.OrbitControls( camera );
+	    controls = new THREE.OrbitControls( camera ),
             container = document.getElementById('container');
         
         var 
@@ -41,6 +41,7 @@
             controls.minDistance = 10;
             controls.maxDistance = 50;
             renderer.setSize(screen.width, screen.height);
+	    renderer.setClearColor(new THREE.Color(0xF0F0FF));
             container.appendChild(renderer.domElement); 
         }
 
@@ -50,7 +51,7 @@
             var geometry = new THREE.BoxGeometry(1, 1, 1),
                 material = new THREE.MeshBasicMaterial({ color : 0xFFFFFF, wireframe: true});
                 
-            cube = new THREE.Mesh( geometry, material );
+            cube = new THREE.Mesh(geometry, material);
             
             scene.add(cube);
 
@@ -59,8 +60,8 @@
         }
 
         function render(){
-            requestAnimationFrame( render ); 
-            renderer.render( scene, camera );
+            requestAnimationFrame(render); 
+            renderer.render(scene, camera);
             
 
         }
