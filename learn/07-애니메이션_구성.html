@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>07-애니메이션_구성</title>
+
+    <!-- cdn 서버를 통해 three.js 스크립트 불러오기 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/86/three.min.js"></script>
+    
+    <style>
+        body {
+            /* 전체 페이지를 사용하기 위해 마진을 없애고 overflow가 될 시 숨기도록 설정 */
+            margin: 0;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- WebGL이 그려질 영역 -->
+    <div id="container"></div>
+
+    <script>
+        
+        var scene,
+            camera,
+            renderer;
+
+        var
+            cube, // 박스
+            plane;
+
+        var 
+            light;            
+
+        var 
+            step = 0;
+
+        window.onload = init; // 모든 것이 로드되면 초기화 함수 실행 
+
+        function init(){  
+  
+            // 매쉬 객체, 카메라와 조명과 같은 모든 요소를 ​​보유 할 씬 구성 
+            scene = new THREE.Scene();
+
+
+            camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+            scene.add(camera);
+            camera.position.set(10,3,10);
+            camera.lookAt(new THREE.Vector3(0,0,0));
+            scene.add(new THREE.AxisHelper(3));
+            var geometry = new THREE.BoxGeometry(1, 1, 1),
+                material = new THREE.MeshBasicMaterial({ color : 0x0FCDFE});
+            cube = new THREE.Mesh(geometry, material);
+            scene.add(cube);
+            cube.position.set(-3, .5, -1.5);
+            var geometry2 = new THREE.PlaneGeometry(6, 6),
+                material2 = new THREE.MeshPhongMaterial({color: 0xFFFFFF});
+            plane = new THREE.Mesh(geometry2, material2);
+            scene.add(plane);
+            plane.rotateX(-Math.PI/2);
+            camera.position.y = 3;
+            light = new THREE.SpotLight(0xFF0000, 1);
+            light.position.set(0, 3, 0);
+            scene.add(light);
+            renderer = new THREE.WebGLRenderer();
+            renderer.setClearColor(new THREE.Color(0xFF00FF));
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.getElementById('container').appendChild(renderer.domElement);
+
+
+
+
+            // 애니메이션 렌더링             
+            render();
+
+            
+
+        }
+
+        function render(){
+
+            /* RAF 호출 
+               https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame
+            */
+            requestAnimationFrame(render);
+            renderer.render(scene, camera);
+            
+            
+            // 박스에 애니메이션 지정
+
+            step += .05;
+
+            cube.position.x = 0.5 + ( 3 * (Math.cos(step)));
+            cube.position.z = 0.5 + ( 3 * (Math.cos(step)));
+
+            cube.position.y = 0.5 + ( 4 * Math.abs(Math.sin(step)));            
+
+            var 
+                rotation = .05;
+
+            cube.rotateX(-rotation);
+            cube.rotateZ(rotation);
+
+        }
+
+    </script>
+
+</body>
