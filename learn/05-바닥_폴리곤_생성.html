@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>05-바닥_폴리곤_생성</title>
+
+    <!-- cdn 서버를 통해 three.js 스크립트 불러오기 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/86/three.min.js"></script>
+    
+    <style>
+        body {
+            /* 전체 페이지를 사용하기 위해 마진을 없애고 overflow가 될 시 숨기도록 설정 */
+            margin: 0;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- WebGL이 그려질 영역 -->
+    <div id="container"></div>
+
+    <script>
+        
+        var scene,
+            camera,
+            renderer;
+
+        var
+            cube, // 박스
+            plane;
+
+
+        window.onload = init; // 모든 것이 로드되면 초기화 함수 실행 
+
+        function init(){  
+  
+            // 매쉬 객체, 카메라와 조명과 같은 모든 요소를 ​​보유 할 씬 구성 
+            scene = new THREE.Scene();
+              
+            
+            camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+            scene.add(camera);
+            camera.position.set(10,3,10);
+            camera.lookAt(new THREE.Vector3(0,0,0));
+
+
+            // 0,0,0 지점에 axis축 오브젝트를 넣어준다.
+            scene.add(new THREE.AxisHelper(3));
+
+
+
+            var geometry = new THREE.BoxGeometry(1, 1, 1),
+                material = new THREE.MeshBasicMaterial({ color : 0xFFFFFF, wireframe: true});
+            cube = new THREE.Mesh(geometry, material);
+            scene.add(cube);
+
+
+            // 이 박스가 배치될 포지션을 지정
+            cube.position.set(0, 3, 0);
+            
+
+            // 바닥을 구성할 기하체와 질감을 구성한다.
+            var geometry2 = new THREE.PlaneGeometry(6, 6),
+                material2 = new THREE.MeshBasicMaterial({color: 0xFFFFFF});
+            
+
+            // 위의 객체들을 가지고 매쉬를 구성
+            plane = new THREE.Mesh(geometry2, material2);
+
+            
+            // 씬안에 바닥을 포함
+            scene.add(plane);
+
+
+            // 바닥에 대한 회전축을 지정
+            plane.rotateX(-Math.PI/2);
+            // plane.rotation.x = -Math.PI/2;
+
+
+            // 씬안에서 카메라가 배치될 y축을 3으로 변경
+            camera.position.y = 3;
+
+
+            renderer = new THREE.WebGLRenderer();
+            renderer.setClearColor(new THREE.Color(0xFF00FF));
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.getElementById('container').appendChild(renderer.domElement);
+            renderer.render(scene, camera); 
+
+        }
+
+    </script>
+
+</body>
