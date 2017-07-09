@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>14-레이캐스팅</title>
+
+    <!-- cdn 서버를 통해 three.js 스크립트 불러오기 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/86/three.min.js"></script>
+    <script src="https://threejs.org/examples/js/libs/dat.gui.min.js"></script>
+    
+    <style>
+        body {
+            /* 전체 페이지를 사용하기 위해 마진을 없애고 overflow가 될 시 숨기도록 설정 */
+            margin: 0;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- WebGL이 그려질 영역 -->
+    <div id="container"></div>
+
+    <script>
+        
+        var scene,
+            camera,
+            renderer;
+
+        var
+            cube,
+            plane;
+
+        var 
+            light;            
+
+        var 
+            step = 0;
+
+        var 
+            gui;
+
+        var 
+            group;
+
+        var 
+            raycaster;   
+ 
+        window.onload = init;
+
+        function init(){  
+  
+
+            scene = new THREE.Scene();
+
+            camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+            scene.add(camera);
+            camera.position.set(10,3,10);
+            camera.lookAt(new THREE.Vector3(0,0,0));
+            scene.add(new THREE.AxisHelper(3));
+            var geometry = new THREE.BoxGeometry(1, 1, 1),
+                material = new THREE.MeshBasicMaterial({ color : 0x0FCDFE});
+            cube = new THREE.Mesh(geometry, material);
+            scene.add(cube);
+            cube.position.set(-3, .5, -1.5);
+            var geometry2 = new THREE.PlaneGeometry(6, 6),
+                material2 = new THREE.MeshPhongMaterial({color: 0xFFFFFF});
+            plane = new THREE.Mesh(geometry2, material2);
+            scene.add(plane);
+            plane.rotateX(-Math.PI/2);
+            camera.position.y = 3;
+            light = new THREE.SpotLight(0xFF0000, 1);
+            light.position.set(0, 3, 0);
+            scene.add(light);
+            renderer = new THREE.WebGLRenderer();
+            renderer.setClearColor(new THREE.Color(0xFF00FF));
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.getElementById('container').appendChild(renderer.domElement);
+            gui = new dat.GUI();
+            var control = {
+                scaleX : cube.scale.x,
+                scaleY : cube.scale.y,
+                scaleZ : cube.scale.z,
+            };
+            gui.add(control, 'scaleX', 0, 5, 1).onChange(function(value){ cube.scale.x = value;
+            });
+            gui.add(control, 'scaleY', 0, 5, 1).onChange(function(value){ cube.scale.y = value;
+            });
+            gui.add(control, 'scaleZ', 0, 5, 1).onChange(function(value){ cube.scale.z = value;
+            });
+
+            var 
+                mesh = new THREE.Mesh( new THREE.BoxGeometry(.3, .3, .3), new THREE.MeshBasicMaterial( { color: 0x00FFFF, wireframe : true } ));
+
+            for(var i = 10; i--;){ 
+                var object = mesh.clone(),
+                    pos = -2.5 + (i * .5);
+                object.position.x = -pos;
+                object.position.z = pos;
+                object.position.y = .3;
+                scene.add(object);
+            } 
+            group = new THREE.Group();
+            group.add(box( 2, 0, 2));
+            group.add(box(-2, 0,-2));
+            group.add(box(-2, 0, 2));
+            group.add(box( 2, 0,-2));
+            scene.add(group);
+            group.position.y = 0.2;
+            control.groupPosY = group.position.y;
+            gui.add(control, 'groupPosY', 0, 3, 0.2).onChange(function(value){
+                group.position.y = value;
+            });
+
+
+
+            raycaster = new THREE.Raycaster();
+
+
+
+            
+            window.addEventListener('resize', resize);
+
+
+
+            // 이벤트 리스너 부착            
+            document.addEventListener('mousedown', shot);
+            render();
+        }
+        
+
+
+
+        function shot(e){
+            e.preventDefault();
+
+            var mouse = {
+                x :  (e.clientX/window.innerWidth)  * 2 - 1,
+                y : -(e.clientY/window.innerHeight) * 2 + 1
+            };
+
+            raycaster.setFromCamera(mouse, camera);
+
+            var 
+                intersects = raycaster.intersectObjects(scene.children); /* THREE.Group안에 포함된 객체들은 검사되지 않는다. */ 
+                // intersects = raycaster.intersectObjects(scene.children, true);
+                /* 두번째 인자가 true시 재귀로 자식들까지 검사한다. */
+
+            
+
+            // 부모 객체 참조하여 자신 제거
+            if(intersects.length) intersects[0].object.parent.remove(intersects[0].object);
+
+
+
+        }
+
+
+
+
+
+
+        function box(x,y,z){
+            var geometry = new THREE.SphereGeometry(.2, 32, 32),
+                material = new THREE.MeshPhongMaterial({color: 0xFFFFFF});
+
+            var 
+                object = new THREE.Mesh(geometry, material);
+
+            object.position.set(x,y,z);
+            return object;
+        }
+
+        function resize(){ 
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+        
+
+        function render(){
+            requestAnimationFrame(render);
+            renderer.render(scene, camera);
+            scene.traverse(function(e){ 
+                if(e instanceof THREE.Mesh && e !== cube && e !== plane){
+                    e.rotateY(.05);
+                } 
+            });
+
+            step += .05;
+            cube.position.x = 0.5 + ( 3 * (Math.cos(step)));
+            cube.position.z = 0.5 + ( 3 * (Math.cos(step)));
+            cube.position.y = 0.5 + ( 4 * Math.abs(Math.sin(step)));            
+
+            var 
+                rotation = .05;
+
+            cube.rotateX(-rotation);
+            cube.rotateZ(rotation);
+ 
+            group.rotateY(.05);
+
+
+        }
+
+    </script>
+
+</body>
