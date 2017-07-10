@@ -1,20 +1,9 @@
 #### Three.js 퀵 가이드북
 
 ##### Quick Start
-- 기본적인 3D 공간 구성
-    - renderer
-    - scene
-    - camera
+- Learn
+    1. [기본구조](https://u4bi.github.io/threejs-quick-guide-book/learn/01-기본구조.html)
 
-- 간단한 큐브 구성하기
-    - geometry
-    - material
-    - cube
-
-- 큐브를 변형 시키기
-    - position
-    - rotation
-    - scale
 
 ##### Object3D
 - transforms
